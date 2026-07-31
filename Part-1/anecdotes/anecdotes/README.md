@@ -1,0 +1,3 @@
+# Anecdotes
+
+Completed exercises 1.12 - 1.14
