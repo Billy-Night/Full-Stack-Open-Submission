@@ -38,14 +38,13 @@ const Part = (props) => {
   );
 };
 
-const Total = (props) => {
+const Total = ({ parts }) => {
+  const totalExercises = parts.reduce((sum, part) => sum + part.exercises, 0);
+
   return (
     <div>
       <h3>Total number of exercises</h3>
-      {props.parts[0].exercises +
-        props.parts[1].exercises +
-        props.parts[2].exercises +
-        props.parts[3].exercises}
+      {totalExercises}
     </div>
   );
 };
