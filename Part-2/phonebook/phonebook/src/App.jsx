@@ -4,22 +4,29 @@ const App = () => {
   const [persons, setPersons] = useState([{ name: "Arto Hellas" }]);
   const [newName, setNewName] = useState("");
 
-  // First handle the submit of the form
-  // Create a new person object
-  // Then add that persons variable (without mutating the original array)
-  // Handle the form input name change
-  // Render all elements of persons array
-
   const handleNameChange = (event) => {
     setNewName(event.target.value);
   };
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
+
+    const personExists = persons.some(
+      (e) => e.name.toLocaleLowerCase() === newName.toLocaleLowerCase(),
+    );
+
+    if (personExists) {
+      alert(`${newName} is already added to the phone book`);
+      setNewName("");
+      return;
+    }
+
     const perObj = {
       name: newName,
     };
+
     setPersons(persons.concat(perObj));
+
     setNewName("");
   };
 
