@@ -1,5 +1,53 @@
 import { useState } from "react";
 
+const Filter = ({ filter, onFilterChange }) => {
+  return (
+    <div>
+      Filter shown with:
+      <input value={filter} onChange={onFilterChange} />
+    </div>
+  );
+};
+
+const PersonForm = ({
+  onSubmit,
+  name,
+  onNameChange,
+  number,
+  onNumberChange,
+}) => {
+  return (
+    <div>
+      <h3>Add a new ££</h3>
+      <form onSubmit={onSubmit}>
+        <div>
+          name: <input value={name} onChange={onNameChange} />
+        </div>
+        <div>
+          number: <input value={number} onChange={onNumberChange} />
+        </div>
+        <div>
+          <button type="Submit">add</button>
+        </div>
+      </form>
+    </div>
+  );
+};
+
+const Persons = ({ persons }) => {
+  return (
+    <div>
+      {persons.map((person) => (
+        <div key={person.id}>
+          <p>
+            {person.name} {person.number}
+          </p>
+        </div>
+      ))}
+    </div>
+  );
+};
+
 const App = () => {
   const [persons, setPersons] = useState([
     { name: "Arto Hellas", number: "040-123456", id: 1 },
@@ -55,30 +103,18 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
-      <div>
-        filter shown with:
-        <input value={filter} onChange={handleFilterChange} />
-      </div>
+      <Filter filter={filter} onFilterChange={handleFilterChange} />
       <h2>Add a new contact</h2>
-      <form onSubmit={handleFormSubmit}>
-        <div>
-          name: <input value={newName} onChange={handleNameChange} />
-        </div>
-        <div>
-          number: <input value={newNumber} onChange={handleNumberChange} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <PersonForm
+        onSubmit={handleFormSubmit}
+        name={newName}
+        onNameChange={handleNameChange}
+        number={newNumber}
+        onNumberChange={handleNumberChange}
+      />
+
       <h2>Numbers</h2>
-      {foundPersons.map((person) => (
-        <div key={person.id}>
-          <p>
-            {person.name} {person.number}
-          </p>
-        </div>
-      ))}
+      <Persons persons={foundPersons} />
     </div>
   );
 };
