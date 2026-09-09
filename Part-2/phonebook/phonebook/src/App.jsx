@@ -35,7 +35,7 @@ const PersonForm = ({
   );
 };
 
-const Persons = ({ persons }) => {
+const Persons = ({ persons, handleDeletePerson }) => {
   return (
     <div>
       {persons.map((person) => (
@@ -43,6 +43,13 @@ const Persons = ({ persons }) => {
           <p>
             {person.name} {person.number}
           </p>
+          <button
+            onClick={() => {
+              handleDeletePerson(person.id, person.name);
+            }}
+          >
+            Delete
+          </button>
         </div>
       ))}
     </div>
@@ -98,20 +105,36 @@ const App = () => {
     const newContact = {
       name: newName,
       number: newNumber,
-      id: Math.max(...persons.map((person) => person.id), 0) + 1,
     };
 
     personService
       .create(newContact)
       .then((returnedPersonne) => {
-        setPersons(persons.concat(returnedPersonne));
+        setPersons((currentPer) => currentPer.concat(returnedPersonne));
       })
       .catch((error) => {
+        console.error(error);
         alert("There was a issue adding the contact");
       });
 
     setNewName("");
     setNewNumber("");
+  };
+
+  const handleDeletePerson = (personId, name) => {
+    if (window.confirm(`Are you sure you would like to delete: ${name}`)) {
+      personService
+        .deletePerson(personId)
+        .then(() => {
+          setPersons((currentPer) =>
+            currentPer.filter((p) => p.id !== personId),
+          );
+        })
+        .catch((err) => {
+          console.error(err);
+          alert("There was an issue with deleting the person");
+        });
+    }
   };
 
   return (
@@ -128,7 +151,7 @@ const App = () => {
       />
 
       <h2>Numbers</h2>
-      <Persons persons={foundPersons} />
+      <Persons persons={foundPersons} handleDeletePerson={handleDeletePerson} />
     </div>
   );
 };

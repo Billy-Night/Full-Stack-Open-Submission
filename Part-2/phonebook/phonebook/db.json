@@ -14,46 +14,6 @@
       "name": "Dan Abramov",
       "number": "12-43-234345",
       "id": "3"
-    },
-    {
-      "name": "Mary Poppendieck",
-      "number": "39-23-6423122",
-      "id": "4"
-    },
-    {
-      "name": "Henry",
-      "number": "123-22-4234",
-      "id": "Yq5KUb9w3wo"
-    },
-    {
-      "name": "Charlie",
-      "number": "123-321-231",
-      "id": "qITC0V2fE1w"
-    },
-    {
-      "name": "Sarah",
-      "number": "213-31-3123",
-      "id": "dCDVez3Gihk"
-    },
-    {
-      "name": "Mary",
-      "number": "312-312",
-      "id": "Xw-GK1bgfRc"
-    },
-    {
-      "name": "Mike",
-      "number": "321-321",
-      "id": "DnM9EEaOP4w"
-    },
-    {
-      "name": "Eddy",
-      "number": "432-4321-341",
-      "id": "Z10gTaND0eY"
-    },
-    {
-      "name": "Bob",
-      "number": "4231-4213",
-      "id": "TJElQ8uifSM"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
