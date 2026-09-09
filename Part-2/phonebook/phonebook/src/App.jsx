@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import personService from "./services/persons";
 
 const Filter = ({ filter, onFilterChange }) => {
   return (
@@ -55,11 +56,14 @@ const App = () => {
   const [filter, setFilter] = useState("");
 
   useEffect(() => {
-    console.log("Effect started");
-    axios.get("http://localhost:3001/persons").then((response) => {
-      console.log("Promise Fulfilled");
-      setPersons(response.data);
-    });
+    personService
+      .getAll()
+      .then((initialPersons) => {
+        setPersons(initialPersons);
+      })
+      .catch((error) => {
+        alert("There was an issue fetching the contacts");
+      });
   }, []);
 
   const handleNameChange = (event) => {
@@ -91,17 +95,16 @@ const App = () => {
       return;
     }
 
-    const perObj = {
+    const newContact = {
       name: newName,
       number: newNumber,
       id: Math.max(...persons.map((person) => person.id), 0) + 1,
     };
 
-    axios
-      .post("http://localhost:3001/persons", perObj)
-      .then((response) => {
-        console.log(response.data);
-        setPersons(persons.concat(response.data));
+    personService
+      .create(newContact)
+      .then((returnedPersonne) => {
+        setPersons(persons.concat(returnedPersonne));
       })
       .catch((error) => {
         alert("There was a issue adding the contact");

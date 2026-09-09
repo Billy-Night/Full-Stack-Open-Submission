@@ -34,6 +34,26 @@
       "name": "Sarah",
       "number": "213-31-3123",
       "id": "dCDVez3Gihk"
+    },
+    {
+      "name": "Mary",
+      "number": "312-312",
+      "id": "Xw-GK1bgfRc"
+    },
+    {
+      "name": "Mike",
+      "number": "321-321",
+      "id": "DnM9EEaOP4w"
+    },
+    {
+      "name": "Eddy",
+      "number": "432-4321-341",
+      "id": "Z10gTaND0eY"
+    },
+    {
+      "name": "Bob",
+      "number": "4231-4213",
+      "id": "TJElQ8uifSM"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
