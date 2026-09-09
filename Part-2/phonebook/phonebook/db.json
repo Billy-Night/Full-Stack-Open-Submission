@@ -14,6 +14,11 @@
       "name": "Dan Abramov",
       "number": "12-43-234345",
       "id": "3"
+    },
+    {
+      "name": "Mary",
+      "number": "123-123",
+      "id": "mFkySoOc0V8"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

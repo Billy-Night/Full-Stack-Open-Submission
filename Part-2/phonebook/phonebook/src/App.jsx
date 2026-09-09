@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import personService from "./services/persons";
 
 const Filter = ({ filter, onFilterChange }) => {
@@ -69,6 +68,7 @@ const App = () => {
         setPersons(initialPersons);
       })
       .catch((error) => {
+        console.error(error);
         alert("There was an issue fetching the contacts");
       });
   }, []);
@@ -92,25 +92,47 @@ const App = () => {
   const handleFormSubmit = (event) => {
     event.preventDefault();
 
-    const personExists = persons.some(
-      (person) => person.name.toLowerCase() === newName.trim().toLowerCase(),
-    );
-
-    if (personExists) {
-      alert(`${newName} is already added to the phone book`);
-      setNewName("");
-      return;
-    }
-
     const newContact = {
       name: newName,
       number: newNumber,
     };
 
+    const existingPerson = persons.find(
+      (person) => person.name.toLowerCase() === newName.trim().toLowerCase(),
+    );
+
+    if (existingPerson) {
+      if (
+        window.confirm(
+          `${newName} is already added, would you like to change the number`,
+        )
+      ) {
+        personService
+          .modifyPerson(existingPerson.id, newContact)
+          .then((returnedPerson) => {
+            setPersons((currentPer) =>
+              currentPer.map((person) =>
+                person.id === returnedPerson.id ? returnedPerson : person,
+              ),
+            );
+            setNewName("");
+            setNewNumber("");
+          })
+          .catch((error) => {
+            console.error(error);
+            alert("There was an issue updating the person's number");
+          });
+      } else {
+        setNewName("");
+        setNewNumber("");
+      }
+      return;
+    }
+
     personService
       .create(newContact)
-      .then((returnedPersonne) => {
-        setPersons((currentPer) => currentPer.concat(returnedPersonne));
+      .then((returnedPerson) => {
+        setPersons((currentPer) => currentPer.concat(returnedPerson));
       })
       .catch((error) => {
         console.error(error);

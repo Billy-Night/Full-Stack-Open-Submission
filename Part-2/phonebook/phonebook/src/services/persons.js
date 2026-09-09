@@ -16,4 +16,9 @@ const deletePerson = (personId) => {
   return request.then((response) => response.data);
 };
 
-export default { getAll, create, deletePerson };
+const modifyPerson = (personId, newContact) => {
+  const request = axios.put(`${baseUrl}/${personId}`, newContact);
+  return request.then((response) => response.data);
+};
+
+export default { getAll, create, deletePerson, modifyPerson };
