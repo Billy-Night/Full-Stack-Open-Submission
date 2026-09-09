@@ -97,7 +97,15 @@ const App = () => {
       id: Math.max(...persons.map((person) => person.id), 0) + 1,
     };
 
-    setPersons(persons.concat(perObj));
+    axios
+      .post("http://localhost:3001/persons", perObj)
+      .then((response) => {
+        console.log(response.data);
+        setPersons(persons.concat(response.data));
+      })
+      .catch((error) => {
+        alert("There was a issue adding the contact");
+      });
 
     setNewName("");
     setNewNumber("");
