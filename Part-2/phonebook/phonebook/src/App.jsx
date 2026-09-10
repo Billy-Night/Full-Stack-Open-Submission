@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import personService from "./services/persons";
+import Notification from "./components/Notification";
 
 const Filter = ({ filter, onFilterChange }) => {
   return (
@@ -60,6 +61,7 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
+  const [notification, setNotification] = useState(null);
 
   useEffect(() => {
     personService
@@ -115,6 +117,10 @@ const App = () => {
                 person.id === returnedPerson.id ? returnedPerson : person,
               ),
             );
+            setNotification(`Great! ${existingPerson.name} number was changed`);
+            setTimeout(() => {
+              setNotification(null);
+            }, 5000);
             setNewName("");
             setNewNumber("");
           })
@@ -133,14 +139,17 @@ const App = () => {
       .create(newContact)
       .then((returnedPerson) => {
         setPersons((currentPer) => currentPer.concat(returnedPerson));
+        setNotification(`Nice! ${returnedPerson.name} has been added`);
+        setTimeout(() => {
+          setNotification(null);
+        }, 5000);
+        setNewName("");
+        setNewNumber("");
       })
       .catch((error) => {
         console.error(error);
         alert("There was a issue adding the contact");
       });
-
-    setNewName("");
-    setNewNumber("");
   };
 
   const handleDeletePerson = (personId, name) => {
@@ -151,6 +160,10 @@ const App = () => {
           setPersons((currentPer) =>
             currentPer.filter((p) => p.id !== personId),
           );
+          setNotification(`${name} was deleted`);
+          setTimeout(() => {
+            setNotification(null);
+          }, 5000);
         })
         .catch((err) => {
           console.error(err);
@@ -162,6 +175,7 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
+      <Notification SuccessMessage={notification} />
       <Filter filter={filter} onFilterChange={handleFilterChange} />
       <h2>Add a new contact</h2>
       <PersonForm
