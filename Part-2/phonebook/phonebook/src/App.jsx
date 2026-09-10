@@ -117,7 +117,10 @@ const App = () => {
                 person.id === returnedPerson.id ? returnedPerson : person,
               ),
             );
-            setNotification(`Great! ${existingPerson.name} number was changed`);
+            setNotification({
+              success: true,
+              message: `Great! ${existingPerson.name} number was changed`,
+            });
             setTimeout(() => {
               setNotification(null);
             }, 5000);
@@ -139,7 +142,10 @@ const App = () => {
       .create(newContact)
       .then((returnedPerson) => {
         setPersons((currentPer) => currentPer.concat(returnedPerson));
-        setNotification(`Nice! ${returnedPerson.name} has been added`);
+        setNotification({
+          success: true,
+          message: `Nice! ${returnedPerson.name} has been added`,
+        });
         setTimeout(() => {
           setNotification(null);
         }, 5000);
@@ -160,14 +166,26 @@ const App = () => {
           setPersons((currentPer) =>
             currentPer.filter((p) => p.id !== personId),
           );
-          setNotification(`${name} was deleted`);
+          setNotification({
+            success: true,
+            message: `${name} was deleted`,
+          });
           setTimeout(() => {
             setNotification(null);
           }, 5000);
         })
-        .catch((err) => {
-          console.error(err);
-          alert("There was an issue with deleting the person");
+        .catch(() => {
+          setNotification({
+            success: false,
+            message: `${name} was already removed from the server`,
+          });
+          setTimeout(() => {
+            console.log("In timeout for catch on promise");
+            setNotification(null);
+          }, 5000);
+          setPersons((currentPer) =>
+            currentPer.filter((p) => p.id !== personId),
+          );
         });
     }
   };
@@ -175,7 +193,8 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
-      <Notification SuccessMessage={notification} />
+      {notification ? <Notification notification={notification} /> : ""}
+      {/* <Notification notification={notification} /> */}
       <Filter filter={filter} onFilterChange={handleFilterChange} />
       <h2>Add a new contact</h2>
       <PersonForm

@@ -17,18 +17,8 @@
     },
     {
       "name": "Mary",
-      "number": "123-123",
-      "id": "mFkySoOc0V8"
-    },
-    {
-      "name": "Charlie",
-      "number": "345-345",
-      "id": "4TXeWv3fLIg"
-    },
-    {
-      "name": "Henry",
-      "number": "568-565",
-      "id": "OQM3D2CxXc0"
+      "number": "222-222",
+      "id": "l5kFZh1MCkE"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
