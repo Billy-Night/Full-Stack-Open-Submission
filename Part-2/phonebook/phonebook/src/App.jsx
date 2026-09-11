@@ -83,13 +83,13 @@ const App = () => {
     setNewNumber(event.target.value);
   };
 
-  const foundPersons = persons.filter((person) =>
-    person.name.toLowerCase().includes(filter.toLowerCase()),
-  );
-
   const handleFilterChange = (event) => {
     setFilter(event.target.value);
   };
+
+  const foundPersons = persons.filter((person) =>
+    person.name.toLowerCase().includes(filter.toLowerCase()),
+  );
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
