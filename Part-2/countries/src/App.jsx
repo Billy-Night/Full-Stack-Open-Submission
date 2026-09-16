@@ -1,16 +1,10 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 
-const countryName = "finland";
-const baseUrl = `https://studies.cs.helsinki.fi/restcountries/`;
 const allCountries = `https://studies.cs.helsinki.fi/restcountries/api/all`;
-const coutryByName = `https://studies.cs.helsinki.fi/restcountries/api/name/${countryName}`;
-// Make and application that allows you to view the countries from API
-// Make the user interface simple, the country is found by searching the name
-// If there are too many countries that match the query, then the user is prompted to make their query more specific
-// Add a button next to each country
-// When pressed show just that country
-// Countries that have names that appear in other countries names can be ignored
+
+// API key used from openweathermap.org
+const api = import.meta.env.VITE_WEATHER_KEY;
 
 const Countries = ({ foundCountry, handleCountrySelect }) => {
   return (
@@ -31,28 +25,47 @@ const Countries = ({ foundCountry, handleCountrySelect }) => {
   );
 };
 
-const Country = ({ country }) => {
+const Country = ({ country, countryWeather }) => {
+  let weatherIcon;
+  if (countryWeather) {
+    weatherIcon = `https://openweathermap.org/payload/api/media/file/${countryWeather.weather[0].icon}.png`;
+  }
   const languages = Object.values(country.languages);
 
   return (
-    <div>
-      <h1>Country Name: {country.name.common}</h1>
-      <p>Capital: {country.capital[0]}</p>
-      <p>Area: {country.area}</p>
-      <h2>Languages</h2>
-      <ul>
-        {languages.map((language) => (
-          <li key={language}>{language}</li>
-        ))}
-      </ul>
-      <img src={country.flags.png} />
-    </div>
+    <>
+      <div>
+        <h1>Country Name: {country.name.common}</h1>
+        <p>Capital: {country.capital[0]}</p>
+        <p>Area: {country.area}</p>
+        <h2>Languages</h2>
+        <ul>
+          {languages.map((language) => (
+            <li key={language}>{language}</li>
+          ))}
+        </ul>
+        <img src={country.flags.png} alt={`Flag of ${country.name.common}`} />
+      </div>
+      <div>
+        {countryWeather ? (
+          <>
+            <h2>Weather in {country.name.common}</h2>
+            <p>Temperature: {countryWeather.temp} Celsius</p>
+            <img src={weatherIcon} alt="weather icon" />
+            <p>Wind {countryWeather.wind_speed} m/s</p>
+          </>
+        ) : (
+          <p>Weather Loading...</p>
+        )}
+      </div>
+    </>
   );
 };
 
 const App = () => {
   const [countries, setAllCountries] = useState([]);
   const [countrySearch, setCountrySearch] = useState("");
+  const [countryWeather, setCountryWeather] = useState(null);
 
   useEffect(() => {
     axios
@@ -69,6 +82,30 @@ const App = () => {
     country.name.common.toLowerCase().includes(countrySearch.toLowerCase()),
   );
 
+  const selectedCountry = foundCountry.length === 1 ? foundCountry[0] : null;
+
+  useEffect(() => {
+    if (!selectedCountry) {
+      setCountryWeather(null);
+      return;
+    }
+
+    setCountryWeather(null);
+
+    const [lat, lon] = foundCountry[0].latlng;
+
+    const weatherApi = `https://api.openweathermap.org/data/4.0/onecall/current?lat=${lat}&lon=${lon}&appid=${api}`;
+
+    axios
+      .get(weatherApi)
+      .then((response) => {
+        setCountryWeather(response.data.data[0]);
+      })
+      .catch((err) => {
+        console.error(`Problem fetching weather for: ${foundCountry}`, err);
+      });
+  }, [selectedCountry?.name.common]);
+
   const handleCountrySearch = (event) => {
     setCountrySearch(event.target.value);
   };
@@ -83,7 +120,7 @@ const App = () => {
       <p>Find countries:</p>
       <input value={countrySearch} onChange={handleCountrySearch} />
       {foundCountry.length === 1 ? (
-        <Country country={foundCountry[0]} />
+        <Country country={foundCountry[0]} countryWeather={countryWeather} />
       ) : (
         <Countries
           foundCountry={foundCountry}
