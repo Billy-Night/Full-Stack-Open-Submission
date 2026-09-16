@@ -8,8 +8,11 @@ const coutryByName = `https://studies.cs.helsinki.fi/restcountries/api/name/${co
 // Make and application that allows you to view the countries from API
 // Make the user interface simple, the country is found by searching the name
 // If there are too many countries that match the query, then the user is prompted to make their query more specific
+// Add a button next to each country
+// When pressed show just that country
+// Countries that have names that appear in other countries names can be ignored
 
-const Countries = ({ foundCountry }) => {
+const Countries = ({ foundCountry, handleCountrySelect }) => {
   return (
     <div>
       {foundCountry.length >= 10 ? (
@@ -18,6 +21,9 @@ const Countries = ({ foundCountry }) => {
         foundCountry.map((country) => (
           <div key={country.name.common}>
             <p>{country.name.common}</p>
+            <button onClick={() => handleCountrySelect(country.name.common)}>
+              Show
+            </button>
           </div>
         ))
       )}
@@ -67,15 +73,22 @@ const App = () => {
     setCountrySearch(event.target.value);
   };
 
+  const handleCountrySelect = (selectedCountry) => {
+    setCountrySearch(selectedCountry);
+  };
+
   return (
     <>
-      <h1>Hello</h1>
+      <h1>Country Search</h1>
       <p>Find countries:</p>
       <input value={countrySearch} onChange={handleCountrySearch} />
       {foundCountry.length === 1 ? (
         <Country country={foundCountry[0]} />
       ) : (
-        <Countries foundCountry={foundCountry} />
+        <Countries
+          foundCountry={foundCountry}
+          handleCountrySelect={handleCountrySelect}
+        />
       )}
     </>
   );
