@@ -60,7 +60,23 @@ app.post("/api/persons", (request, response) => {
   const body = request.body;
 
   if (!body.name) {
-    return response.status(400).json({ error: "No name added" });
+    return response.status(400).json({
+      error: "No name added",
+    });
+  }
+
+  if (!body.number) {
+    return response.status(400).json({
+      error: "No number added",
+    });
+  }
+
+  const personExist = phonebook.some((person) => person.name === body.name);
+
+  if (personExist) {
+    return response.status(409).json({
+      error: "A person with that name already exists",
+    });
   }
 
   const person = {
